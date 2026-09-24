@@ -385,7 +385,7 @@ def main() -> None:
             conn.commit()
             print(f"Indexed {abstract_count} abstract chunks")
             if args.include_pdfs:
-                print(f"Indexed {pdf_count} PDF chunks; skipped {missing_pdfs} missing PDF files")
+                print(f"Indexed {pdf_count} PDF chunks; skipped {missing_pdfs} missing or unreadable PDF files")
         elif args.command == "search":
             rows = search_corpus(
                 conn,

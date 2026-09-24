@@ -313,7 +313,15 @@ def index_pdfs(
         if not path.exists():
             missing += 1
             continue
-        text = extract_pdf_text(path, max_pages=max_pages)
+        try:
+            text = extract_pdf_text(path, max_pages=max_pages)
+        except RuntimeError:
+            raise  # pypdf itself is unavailable; retrying other files cannot help
+        except Exception:
+            # Encrypted, corrupt, or otherwise unreadable file. One bad PDF must
+            # not abort a whole-corpus indexing run.
+            missing += 1
+            continue
         indexed += index_chunks(
             conn,
             source_type="work",
