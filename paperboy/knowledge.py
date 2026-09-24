@@ -137,6 +137,12 @@ def reset_index(conn: sqlite3.Connection) -> None:
     conn.execute("DELETE FROM corpus_chunks")
 
 
+def count_pdf_chunks(conn: sqlite3.Connection) -> int:
+    return conn.execute(
+        "SELECT COUNT(*) FROM corpus_chunks WHERE chunk_kind = 'pdf'"
+    ).fetchone()[0]
+
+
 def _delete_existing(
     conn: sqlite3.Connection,
     source_type: str,

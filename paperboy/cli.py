@@ -20,6 +20,7 @@ from .conference import harvest_afa_programs, harvest_wfa_program, import_confer
 from .fetchers import harvest_crossref, harvest_openalex, harvest_ssrn_openalex, enrich_unpaywall
 from .knowledge import (
     format_result,
+    count_pdf_chunks,
     download_candidate_pdfs,
     index_abstracts,
     index_pdfs,
@@ -177,6 +178,11 @@ def main() -> None:
     index_corpus.add_argument("--source", choices=["all", "works", "leads"], default="all")
     index_corpus.add_argument("--limit", type=int, help="Limit abstract rows per selected source")
     index_corpus.add_argument("--include-pdfs", action="store_true", help="Also index local PDFs recorded in works.pdf_path")
+    index_corpus.add_argument(
+        "--skip-pdfs",
+        action="store_true",
+        help="With --rebuild: drop existing PDF chunks and rebuild abstracts only (by default a rebuild re-indexes PDFs so full-text search is not silently lost)",
+    )
     index_corpus.add_argument("--max-pdf-pages", type=int, help="Optional page cap for PDF text extraction")
 
     search = subparsers.add_parser("search")
@@ -371,12 +377,28 @@ def main() -> None:
                     f"{row['title'] or 'untitled'} | {row['doi']}{pdf}"
                 )
         elif args.command == "index-corpus":
+            if args.include_pdfs and args.skip_pdfs:
+                parser.error("--include-pdfs and --skip-pdfs are mutually exclusive")
+            include_pdfs = args.include_pdfs
             if args.rebuild:
+                existing_pdf_chunks = count_pdf_chunks(conn)
+                if existing_pdf_chunks and not include_pdfs:
+                    if args.skip_pdfs:
+                        print(
+                            f"WARNING: --rebuild --skip-pdfs is dropping {existing_pdf_chunks} existing PDF chunks. "
+                            "Full-text PDF search will be unavailable until you re-run with --include-pdfs."
+                        )
+                    else:
+                        print(
+                            f"--rebuild would drop {existing_pdf_chunks} existing PDF chunks, so PDFs will be "
+                            "re-indexed automatically (pass --skip-pdfs for an abstracts-only rebuild)."
+                        )
+                        include_pdfs = True
                 reset_index(conn)
             abstract_count = index_abstracts(conn, source=args.source, limit=args.limit)
             pdf_count = 0
             missing_pdfs = 0
-            if args.include_pdfs:
+            if include_pdfs:
                 pdf_count, missing_pdfs = index_pdfs(
                     conn,
                     limit=args.limit,
@@ -384,7 +406,7 @@ def main() -> None:
                 )
             conn.commit()
             print(f"Indexed {abstract_count} abstract chunks")
-            if args.include_pdfs:
+            if include_pdfs:
                 print(f"Indexed {pdf_count} PDF chunks; skipped {missing_pdfs} missing or unreadable PDF files")
         elif args.command == "search":
             rows = search_corpus(
