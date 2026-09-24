@@ -1,0 +1,75 @@
+[journals.jf]
+name = "The Journal of Finance"
+publisher = "Wiley"
+issns = ["0022-1082", "1540-6261"]
+tier = "top3"
+
+[journals.jfe]
+name = "Journal of Financial Economics"
+publisher = "Elsevier"
+issns = ["0304-405X"]
+tier = "top3"
+
+[journals.rfs]
+name = "Review of Financial Studies"
+publisher = "Oxford University Press"
+issns = ["0893-9454", "1465-7368"]
+tier = "top3"
+
+[journals.jfqa]
+name = "Journal of Financial and Quantitative Analysis"
+publisher = "Cambridge University Press"
+issns = ["0022-1090", "1756-6916"]
+tier = "top_field"
+
+[journals.management_science]
+name = "Management Science"
+publisher = "INFORMS"
+issns = ["0025-1909", "1526-5501"]
+tier = "top_field"
+
+[journals.review_of_finance]
+name = "Review of Finance"
+publisher = "Oxford University Press"
+issns = ["1572-3097", "1573-692X", "1875-824X"]
+tier = "top_field"
+
+[journals.jcf]
+name = "Journal of Corporate Finance"
+publisher = "Elsevier"
+issns = ["0929-1199"]
+tier = "field"
+
+[journals.jbf]
+name = "Journal of Banking & Finance"
+publisher = "Elsevier"
+issns = ["0378-4266"]
+tier = "field"
+
+[journals.jfi]
+name = "Journal of Financial Intermediation"
+publisher = "Elsevier"
+issns = ["1042-9573", "1096-0473"]
+tier = "field"
+
+[journals.jfm]
+name = "Journal of Financial Markets"
+publisher = "Elsevier"
+issns = ["1386-4181"]
+tier = "field"
+
+[journals.jfec]
+name = "Journal of Financial Econometrics"
+publisher = "Oxford University Press"
+issns = ["1479-8409", "1479-8417"]
+tier = "field"
+
+[journals.jempfin]
+name = "Journal of Empirical Finance"
+publisher = "Elsevier"
+issns = ["0927-5398"]
+tier = "field"
+
+[watchlists.working_papers]
+name = "Working papers and conference leads"
+sources = ["SSRN", "AFA/ASSA", "WFA", "SFS Cavalcade", "NBER", "CEPR", "ECGI"]
